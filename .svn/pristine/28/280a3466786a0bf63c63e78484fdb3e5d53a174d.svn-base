@@ -1,0 +1,159 @@
+package graphicalUserInterface;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import org.json.JSONException;
+
+import netWork.NetWorkInterface;
+import netWork.User;
+
+import controller.Controller;
+
+
+public class GUI implements AbstractGui {
+	protected static JTextField messageToSend;
+	protected static JTextArea messages;
+	protected static JTextArea list;
+	protected static JTextArea textNotCo;
+	protected static JButton btnSend;
+	protected static JButton btnDeconnect;
+	protected static JButton connect;
+
+	private Controller controller;
+	
+	public void initComponentConnected(String pseudo){
+		
+	      JFrame f = new JFrame("A JFrame");
+	      f.setSize(379, 334);
+	      f.setLocation(300,200);
+	      f.getContentPane().setLayout(null);
+	      
+	      btnSend = new JButton("Send");
+	      btnSend.setBounds(10, 277, 117, 29);
+	      f.getContentPane().add(btnSend);
+	      
+	      messageToSend = new JTextField();
+	      messageToSend.setBounds(129, 276, 225, 28);
+	      f.getContentPane().add(messageToSend);
+	      messageToSend.setColumns(10);
+	      
+	      messages = new JTextArea();
+	      messages.setBounds(129, 6, 225, 259);
+	      f.getContentPane().add(messages);
+	      messages.setColumns(10);
+	      messages.setFocusable(false);
+	      
+	      btnDeconnect = new JButton("Deconnect");
+	      btnDeconnect.setBounds(10, 247, 117, 29);
+	      f.getContentPane().add(btnDeconnect);
+	      
+	      list = new JTextArea();
+	      list.setBounds(6, 6, 118, 237);
+	      f.getContentPane().add(list);
+	      list.setColumns(10);
+	      f.setVisible(true);
+	      
+	      list.setFocusable(false);
+	      list.setText("test \n lol");
+	      btnSend.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					controller.getNI().sendMessage(controller.getNI().createMessage(Controller.message, messageToSend.getText(), InetAddress.getLocalHost(), 0, NetWorkInterface.portReceiver));
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+	    	  
+	      });
+		
+	}
+	
+	public void initComponentNotConnected(){
+	      final JFrame f = new JFrame("A JFrame");
+	      f.setSize(379, 334);
+	      f.setLocation(300,200);
+	      f.getContentPane().setLayout(null);
+	      
+	      connect = new JButton("Connect");
+	      connect.setBounds(53, 39, 117, 29);
+	      
+	      f.getContentPane().add(connect);
+	      
+	      textNotCo = new JTextArea();
+	      textNotCo.setBounds(6, 6, 214, 21);
+	      f.getContentPane().add(textNotCo);
+	      textNotCo.setColumns(10);
+	      f.setVisible(true);
+	      
+	      connect.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					try {
+						f.setVisible(false);
+						initComponentConnected(textNotCo.getText());
+						NetWorkInterface.myName = textNotCo.getText();
+						controller.getNI().sendMessage(controller.getNI().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getLocalHost(), 0, NetWorkInterface.portReceiver));
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}finally{
+
+				}
+			}
+	    	  
+	      });
+	      
+	}
+   
+	public void majUserList(ArrayList<User> userList){
+		//this.setUserList(userList);EN GROS
+		this.list.setText("");
+		for(int i = 0;i< userList.size();i++){
+			this.list.setText(this.list.getText().toString()+userList.get(i).getName()+" "+userList.get(i).getIp().toString()+"\n");
+		}
+	}
+	
+	public void afficheMessage(String from,String message, int numero){
+		this.messages.setText(this.messages.getText()+"\n"+from+" : "+message);
+	}
+	
+	public void accuseMessage(int numeroMessage){
+		
+	}
+	
+	public void setController(Controller c){
+		this.controller = c;
+	}
+	
+	
+}

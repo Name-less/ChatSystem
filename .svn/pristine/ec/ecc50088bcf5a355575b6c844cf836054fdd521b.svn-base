@@ -1,0 +1,223 @@
+package netWork;
+
+import java.io.UnsupportedEncodingException;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import controller.Controller;
+
+public class NetWorkInterface {
+
+	private ActionOnList actionOnList;
+	
+	private Controller controller;
+	private UDPSender udpSender;
+	private UDPReceiver udpReceiver;
+	
+	public static int numeroMessageSend = 0;
+	public static int portSender = 2222;
+	public static int portReceiver = 1111;
+	
+	public static String myName = "Xineohp";
+
+	public NetWorkInterface(Controller controller){
+		actionOnList = new ActionOnList(controller);
+		
+		this.controller = controller;
+		udpReceiver = new UDPReceiver(this);
+		udpSender = new UDPSender();
+		
+		Thread runUDPThreadRec = new Thread(new runReceiver());
+		runUDPThreadRec.start();
+		
+		Thread runUDPThreadSender = new Thread(new runSender());
+		runUDPThreadSender.start();
+	}
+	
+	public void addPacketRecu(DatagramPacket packet){
+		
+		Thread threadTraitePacket = new Thread(new TraiterPacketRecu(packet));
+		threadTraitePacket.start();
+	}
+		
+	/*
+	 * 
+	 * ACTION SUR CONTROLLER
+	 * 
+	 */
+
+	public void addMessage(String from, String message,int numero){
+		controller.afficheMessage(from, message, numero);
+	}
+	
+	public void addMessageAck(String from, int numero){
+		controller.addMessageAck(from, numero);
+	}
+	
+	/*
+	 * 
+	 * LES RUNNABLES
+	 * 
+	 */
+	
+	public class runReceiver implements Runnable{
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			udpReceiver.run();
+		}
+		
+	}
+	
+	public class runSender implements Runnable{
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			udpSender.run();
+		}
+		
+	}
+	
+	public class TraiterPacketRecu implements Runnable{
+
+		DatagramPacket toTreat;
+		public TraiterPacketRecu(DatagramPacket packet){
+			this.toTreat = packet;
+		}
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			try {
+				traiterPacketRecu(toTreat);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public void killThreads(){
+		udpSender.disconnect();
+		udpReceiver.disconnect();
+	}
+	
+	/*
+	 * 
+	 * ACTIONS DECLANCHEE PAR LE CONTROLEUR
+	 * 
+	 */
+	
+	public void sendMessage(DatagramPacket packetToSend){
+		synchronized(udpSender){
+			udpSender.setDatagramPacket(packetToSend);
+			udpSender.notify();
+		}
+	}
+	
+	/*
+	 * 
+	 * AUTRE METHODES 
+	 * 
+	 */
+	
+	public ActionOnList getActionOnList(){
+		return this.actionOnList;
+	}
+
+	public void traiterPacketRecu(DatagramPacket packetToTreat)throws UnsupportedEncodingException, JSONException, UnknownHostException{
+		//on traite et on envoit au controller ce qu'il faut modifier
+			JSONObject data;
+			String test = new String(packetToTreat.getData(),"UTF-8");
+			data = new JSONObject(test);
+			if(data.getString(Controller.type).equals(Controller.message)){
+				
+				String message = data.getString(Controller.messageData);
+				addMessage(this.actionOnList.getNameFromIp(packetToTreat.getAddress()),message,Integer.parseInt(data.getString(Controller.messageNumber)));
+				this.sendMessage(this.createMessage(Controller.messageAck,myName,packetToTreat.getAddress(),Integer.parseInt(data.getString(Controller.messageNumber)),NetWorkInterface.portReceiver));
+				
+			}else if(data.getString(Controller.type).equals(Controller.messageAck)){
+				
+				addMessageAck(this.actionOnList.getNameFromIp(packetToTreat.getAddress()),Integer.parseInt(data.getString(Controller.messageNumber)));
+				
+			}else if(data.getString(Controller.type).equals(Controller.connect)){
+				
+				this.actionOnList.addUserToList(data.getString(Controller.userName),packetToTreat.getAddress());
+				this.sendMessage(this.createMessage(Controller.connectAck,myName,packetToTreat.getAddress(),0,NetWorkInterface.portReceiver));
+
+			}else if(data.getString(Controller.type).equals(Controller.disconnect)){
+				
+				this.actionOnList.removeUserToList(data.getString(Controller.userName));
+				
+			}else if(data.getString(Controller.type).equals(Controller.connectAck)){
+				this.actionOnList.addUserToList(data.getString(Controller.userName),packetToTreat.getAddress());
+				
+			}			
+	}
+	
+	public DatagramPacket createMessage(String type,String value,InetAddress host,int messageNumber,int port) throws UnknownHostException, JSONException, UnsupportedEncodingException {
+		byte [] lol = new byte[1024];
+		DatagramPacket message = new DatagramPacket(lol,0,host,port);
+		
+		JSONObject data = new JSONObject();
+			if(type.equals(Controller.message)){
+				
+				data.put(Controller.type, Controller.message);
+				data.put(Controller.messageData,value);
+				data.put(Controller.messageNumber,messageNumber);
+				message.setPort(port);
+				message.setAddress(InetAddress.getLocalHost());
+				numeroMessageSend++;
+				
+			}else if(type.equals(Controller.messageAck)){
+				
+				data.put(Controller.type, Controller.messageAck);
+				data.put(Controller.messageNumber,messageNumber);
+				message.setAddress(host);
+				message.setPort(port);
+
+			}else if(type.equals(Controller.connect)){
+				
+					data.put(Controller.type, Controller.connect);
+					data.put(Controller.userName,value);
+					message.setAddress(InetAddress.getLocalHost());
+					message.setPort(port);
+
+			}else if(type.equals(Controller.disconnect)){
+				
+					data.put(Controller.type, Controller.disconnect);
+					message.setAddress(InetAddress.getByName("255.255.255.255"));
+					message.setPort(port);
+					
+			}else if(type.equals(Controller.connectAck)){
+				
+				data.put(Controller.type, Controller.connectAck);
+				data.put(Controller.userName, NetWorkInterface.myName);
+				message.setAddress(host);
+				message.setPort(port);
+
+			}	
+		
+			System.out.println("type envoyé "+type +" data "+data.toString());
+			message.setData(data.toString().getBytes("UTF-8"));
+		
+		return message;
+	}
+	
+}

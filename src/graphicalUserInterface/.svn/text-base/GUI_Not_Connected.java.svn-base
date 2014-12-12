@@ -1,0 +1,97 @@
+package graphicalUserInterface;
+
+import java.awt.Color;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
+
+public class GUI_Not_Connected {
+	private static JTextField list;
+
+   public static void main(String[] args) {
+	   JFrame	fConnected = new JFrame("A JFrame");
+		fConnected.setSize(675, 334);
+		fConnected.setLocation(300,200);
+		fConnected.getContentPane().setLayout(null);
+     
+		JButton    btnSend = new JButton("Send");
+     btnSend.setBounds(10, 277, 181, 29);
+     fConnected.getContentPane().add(btnSend);
+     
+     JTextField   messageToSend = new JTextField();
+
+     messageToSend.setBounds(203, 276, 291, 28);
+     fConnected.getContentPane().add(messageToSend);
+     messageToSend.setColumns(10);
+     
+     
+     JButton     btnDeconnect = new JButton("Deconnect");
+     btnDeconnect.setBounds(10, 248, 181, 29);
+     fConnected.getContentPane().add(btnDeconnect);
+     fConnected.setVisible(true);
+     
+     JCheckBox   checkBox = new JCheckBox("New check box");
+     checkBox.setBounds(10, 1, 181, 23);
+     fConnected.getContentPane().add(checkBox);
+     
+     JCheckBox  checkBox_1 = new JCheckBox("New check box");
+     checkBox_1.setBounds(10, 30, 181, 23);
+     fConnected.getContentPane().add(checkBox_1);
+     
+     JCheckBox  checkBox_2 = new JCheckBox("New check box");
+     checkBox_2.setBounds(10, 57, 181, 23);
+     fConnected.getContentPane().add(checkBox_2);
+     
+     JCheckBox   checkBox_3 = new JCheckBox("New check box");
+     checkBox_3.setBounds(10, 82, 181, 23);
+     fConnected.getContentPane().add(checkBox_3);
+     
+     JCheckBox   checkBox_4 = new JCheckBox("New check box");
+     checkBox_4.setBounds(10, 106, 181, 23);
+     fConnected.getContentPane().add(checkBox_4);
+     
+     JCheckBox   checkBox_5 = new JCheckBox("New check box");
+     checkBox_5.setBounds(10, 128, 181, 23);
+     fConnected.getContentPane().add(checkBox_5);
+     
+     JCheckBox   checkBox_6 = new JCheckBox("New check box");
+     checkBox_6.setBounds(10, 152, 181, 23);
+     fConnected.getContentPane().add(checkBox_6);
+     
+     JCheckBox   checkBox_7 = new JCheckBox("New check box");
+     checkBox_7.setBounds(10, 177, 181, 23);
+     fConnected.getContentPane().add(checkBox_7);
+     
+     JCheckBox  checkBox_8 = new JCheckBox("New check box");
+     checkBox_8.setBounds(10, 202, 181, 23);
+     fConnected.getContentPane().add(checkBox_8);
+     
+     JCheckBox checkBox_9 = new JCheckBox("New check box");
+     checkBox_9.setBounds(10, 225, 181, 23);
+     fConnected.getContentPane().add(checkBox_9);
+     
+     JTextArea textArea = new JTextArea();
+     textArea.setFocusable(false);
+     textArea.setColumns(10);
+     textArea.setBounds(506, 5, 163, 260);
+     fConnected.getContentPane().add(textArea);
+     
+     JScrollPane scrollPane = new JScrollPane();
+     scrollPane.setBounds(203, 17, 291, 247);
+     
+     DefaultListModel message = new  DefaultListModel();
+     message.addElement("lol");
+     JList listMessage = new JList(message);
+
+     scrollPane.setColumnHeaderView(listMessage);
+     fConnected.getContentPane().add(scrollPane);
+
+   }
+}

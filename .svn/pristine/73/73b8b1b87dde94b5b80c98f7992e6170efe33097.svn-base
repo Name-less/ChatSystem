@@ -1,0 +1,69 @@
+package graphicalUserInterface;
+
+import java.awt.Color;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+
+public class GUI_Not_Connected {
+	private static JTextField list;
+
+   public static void main(String[] args) {
+	      final JFrame f = new JFrame("A JFrame");
+	      f.setSize(379, 334);
+	      f.setLocation(300,200);
+	      f.getContentPane().setLayout(null);
+	      
+	      JButton connect = new JButton("Connect");
+	      connect.setBounds(53, 39, 117, 29);
+	      
+	      f.getContentPane().add(connect);
+	      
+	      JTextArea   textNotCo = new JTextArea();
+	      textNotCo.setBounds(6, 6, 214, 21);
+	      f.getContentPane().add(textNotCo);
+	      textNotCo.setColumns(10);
+	      
+	      JPanel panel = new JPanel();
+	      panel.setBounds(16, 68, 10, 10);
+	      panel.setBackground(Color.blue);
+	      f.getContentPane().add(panel);
+	      
+	      JPanel panel_1 = new JPanel();
+	      panel_1.setBounds(38, 68, 10, 10);
+	      f.getContentPane().add(panel_1);
+	      
+	      JPanel panel_2 = new JPanel();
+	      panel_2.setBounds(63, 68, 10, 10);
+	      f.getContentPane().add(panel_2);
+	      
+	      JPanel panel_3 = new JPanel();
+	      panel_3.setBounds(84, 68, 10, 10);
+	      f.getContentPane().add(panel_3);
+	      
+	      JPanel panel_4 = new JPanel();
+	      panel_4.setBounds(107, 68, 10, 10);
+	      f.getContentPane().add(panel_4);
+	      
+	      JPanel panel_5 = new JPanel();
+	      panel_5.setBounds(129, 68, 10, 10);
+	      f.getContentPane().add(panel_5);
+	      
+	      JPanel panel_6 = new JPanel();
+	      panel_6.setBounds(151, 68, 10, 10);
+	      f.getContentPane().add(panel_6);
+	      
+	      JPanel panel_7 = new JPanel();
+	      panel_7.setBounds(173, 68, 10, 10);
+	      f.getContentPane().add(panel_7);
+	      
+	      JPanel panel_8 = new JPanel();
+	      panel_8.setBounds(194, 68, 10, 10);
+	      f.getContentPane().add(panel_8);
+	      f.setVisible(true);
+   }
+}

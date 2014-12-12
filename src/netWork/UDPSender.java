@@ -18,7 +18,6 @@ public class UDPSender implements Runnable {
 		running = true;
 		try {
 			socket = new DatagramSocket(NetWorkInterface.portSender,InetAddress.getLocalHost());
-			socket.setBroadcast(true);
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -35,8 +34,8 @@ public class UDPSender implements Runnable {
 			try {
 				synchronized(this){
 					wait();
+					socket.send(packetToSend);
 				}
-				socket.send(packetToSend);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

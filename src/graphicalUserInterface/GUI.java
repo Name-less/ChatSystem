@@ -221,6 +221,7 @@ public class GUI implements AbstractGui {
 					fConnected.setVisible(false);
 					initComponentNotConnected();
 					controller.getNI().getActionOnList().reInitList();
+				//	controller.getNI().killThreads();
 					controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.disconnect, "", null, 0, NetWorkInterface.portReceiver,couleur));
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
@@ -422,8 +423,8 @@ public class GUI implements AbstractGui {
 									fConnected.setVisible(true);
 								}
 								NetWorkInterface.myName = textNotCo.getText();
-								controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getLocalHost(), 0, NetWorkInterface.portReceiver,couleur));
-								controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getByName("255.255.255.255"), 0, NetWorkInterface.portReceiver,couleur));
+								//controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getLocalHost(), 0, NetWorkInterface.portReceiver,couleur));
+								controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getByName("10.1.255.255"), 0, NetWorkInterface.portReceiver,couleur));
 							} catch (UnsupportedEncodingException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();

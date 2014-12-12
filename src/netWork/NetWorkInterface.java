@@ -149,7 +149,6 @@ public class NetWorkInterface {
 	
 	public void treatMessage(MessageGlobal toTreat){
 		if(toTreat.getType().equals(Controller.message)){
-						
 			Message toTreatReal = (Message)toTreat;
 			
 			this.addMessage(this.getActionOnList().getNameFromIp(toTreatReal.getIp()),toTreatReal.getData(),toTreatReal.getNumber());

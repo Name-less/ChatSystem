@@ -86,6 +86,9 @@ public class Factory extends AbstractFactory {
 		
 			JSONObject data;
 			String test = new String(packetToTreat.getData(),"UTF-8");
+			
+			System.out.println("on traite : "+test);
+			
 			data = new JSONObject(test);
 			if(data.getString(Controller.type).equals(Controller.message)){
 				String couleur = "";

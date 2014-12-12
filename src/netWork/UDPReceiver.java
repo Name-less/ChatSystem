@@ -25,12 +25,8 @@ public class UDPReceiver implements Runnable{
 		byte[] buf = new byte[1024];
 		remotePacket = new DatagramPacket(buf,buf.length);
 		try {
-			socket = new DatagramSocket(NetWorkInterface.portReceiver,InetAddress.getLocalHost());
-			socket.setBroadcast(true);
+			socket = new DatagramSocket(NetWorkInterface.portReceiver);
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -41,10 +37,12 @@ public class UDPReceiver implements Runnable{
 		// TODO Auto-generated method stub
 		while(running){
 			try {
-				socket.receive(remotePacket);//packet reçu, on le met dans le remote packet
+				System.out.println("Avant la reception");
+				socket.receive(remotePacket);//packet reÔøΩu, on le met dans le remote packet
+				System.out.println("Juste apr√©s la reception");
 				DatagramPacket clonePacket = new DatagramPacket(remotePacket.getData(), remotePacket.getData().length, remotePacket.getAddress(), remotePacket.getPort());;
-				this.interFace.addPacketRecu(clonePacket);//on l'ajoute à la liste des packets recu dans le networkinterface
-				System.out.println("paquet recu bingo");
+				this.interFace.addPacketRecu(clonePacket);//on l'ajoute ÔøΩ la liste des packets recu dans le networkinterface
+				System.out.println("Apr√©s le traitement");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

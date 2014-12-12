@@ -1,9 +1,9 @@
 package graphicalUserInterface;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import controller.Controller;
-
 import netWork.User;
 
 public interface AbstractGui {
@@ -20,4 +20,6 @@ public interface AbstractGui {
 	public abstract void initComponentNotConnected();
 	
 	public abstract void initComponentConnected(String pseudo);
+	
+	public abstract Color getColor();
 }

@@ -34,8 +34,10 @@ public class Controller{
 	public static String userName = "userName";
 	public static String messageData = "messageData";
 	public static String messageNumber = "messageNumber";
+	public static String color = "color";
 
 	private AbstractGui gui;
+	
 	
 	
 	public Controller(){
@@ -44,6 +46,9 @@ public class Controller{
 	
 	public void setGui(AbstractGui gui){
 		this.gui = gui;
+	}
+	public AbstractGui getGui(){
+		return this.gui;
 	}
 	
 	public void majUserList(ArrayList<User> userList){

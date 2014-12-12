@@ -1,5 +1,6 @@
 package factory;
 
+import java.awt.Color;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -20,16 +21,26 @@ public class Factory extends AbstractFactory {
 		this.ni = ni;
 	}
 	
-	public DatagramPacket createMessage(String type,String value,InetAddress host,int messageNumber,int port) throws UnknownHostException, JSONException, UnsupportedEncodingException {
+	public DatagramPacket createMessage(String type,String value,InetAddress host,int messageNumber,int port,Color couleur) throws UnknownHostException, JSONException, UnsupportedEncodingException {
 		byte [] lol = new byte[1024];
 		DatagramPacket message = new DatagramPacket(lol,0,host,port);
 		
 		JSONObject data = new JSONObject();
 			if(type.equals(Controller.message)){
-				
+				String hex = "";
+				try{
+				hex = Integer.toHexString(couleur.getRGB() & 0xffffff);
+				if (hex.length() < 6) {
+				    hex = "0" + hex;
+				}
+				hex = "#" + hex;
+				}catch(NullPointerException e){
+					
+				}
 				data.put(Controller.type, Controller.message);
 				data.put(Controller.messageData,value);
 				data.put(Controller.messageNumber,messageNumber);
+				data.put(Controller.color, hex);
 				message.setPort(port);
 				message.setAddress(host);
 				NetWorkInterface.numeroMessageSend++;
@@ -63,7 +74,7 @@ public class Factory extends AbstractFactory {
 
 			}	
 		
-			System.out.println("type envoyŽ "+type +" data "+data.toString());
+			System.out.println("type envoyï¿½ "+type +" data "+data.toString());
 			message.setData(data.toString().getBytes("UTF-8"));
 			
 		return message;
@@ -77,9 +88,17 @@ public class Factory extends AbstractFactory {
 			String test = new String(packetToTreat.getData(),"UTF-8");
 			data = new JSONObject(test);
 			if(data.getString(Controller.type).equals(Controller.message)){
-				
-				messageGlobal = new Message(data.getString(Controller.type),data.getString(Controller.messageData),Integer.parseInt(data.getString(Controller.messageNumber)),packetToTreat.getAddress());
-								
+				String couleur = "";
+				try{
+					couleur = data.getString(Controller.color);
+				}catch(JSONException e){
+					couleur = "";
+				}
+				try{
+				messageGlobal = new Message(data.getString(Controller.type),data.getString(Controller.messageData),Integer.parseInt(data.getString(Controller.messageNumber)),packetToTreat.getAddress(),Color.decode(couleur));
+				}catch(NumberFormatException e){
+					messageGlobal = new Message(data.getString(Controller.type),data.getString(Controller.messageData),Integer.parseInt(data.getString(Controller.messageNumber)),packetToTreat.getAddress(),Color.BLACK);
+				}
 			}else if(data.getString(Controller.type).equals(Controller.messageAck)){
 				
 				messageGlobal = new MessageAck(data.getString(Controller.type),packetToTreat.getAddress(),Integer.parseInt(data.getString(Controller.messageNumber)));

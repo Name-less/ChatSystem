@@ -1,6 +1,7 @@
 package graphicalUserInterface;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,17 +15,21 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Locale;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -33,6 +38,7 @@ import org.json.JSONException;
 import netWork.NetWorkInterface;
 import netWork.User;
 import controller.Controller;
+import factory.Message;
 
 
 public class GUI implements AbstractGui {
@@ -52,12 +58,17 @@ public class GUI implements AbstractGui {
 		
 	private Color couleur;
 	
+	public Color getColor(){
+		return this.couleur;
+	}
+	
 	JCheckBox checkBox,checkBox_1,checkBox_2,checkBox_3,checkBox_4,checkBox_5,checkBox_6,checkBox_7,checkBox_8,checkBox_9;
 	JCheckBox[] checkBoxArray;
 	public void initComponentConnected(String pseudo){
 			checkBoxArray = new JCheckBox[10];
 			fConnected = new JFrame("A JFrame");
-			fConnected.setSize(725, 650);
+			fConnected.setBackground(Color.PINK);
+			fConnected.setSize(925, 650);
 			fConnected.setLocation(300,200);
 			fConnected.getContentPane().setLayout(null);
 	      
@@ -69,7 +80,7 @@ public class GUI implements AbstractGui {
 	
 		     historique = new JScrollPane();
 		     historique.setFocusable(false);
-		     historique.setBounds(506, 5, 213, 260);
+		     historique.setBounds(700, 5, 400, 260);
 	         historique.setColumnHeaderView(listHistorique);
 
 	         messageHistorique.add(0, "Historique des messages recues");
@@ -89,10 +100,12 @@ public class GUI implements AbstractGui {
 
 	      
 	         JScrollPane scrollPane = new JScrollPane();
-	         scrollPane.setBounds(203, 17, 291, 247);
-	      
+	         scrollPane.setBounds(200, 17, 495, 247);
+
 	         message = new  DefaultListModel();
 	         listMessage = new JList(message);
+	         listMessage.setCellRenderer(new MyCellRenderer());
+
 	         listMessage.setLayoutOrientation(JList.VERTICAL);
 	         listMessage.setVisibleRowCount(15);
 
@@ -182,7 +195,7 @@ public class GUI implements AbstractGui {
 				// TODO Auto-generated method stub
 				try {
 					for(int i = 0;i<controller.getNI().getActionOnList().getUserGroup().size();i++){
-						controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.message, messageToSend.getText(), controller.getNI().getActionOnList().getUserGroup().get(i).getIp(), NetWorkInterface.numeroMessageSend, NetWorkInterface.portReceiver));
+						controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.message, messageToSend.getText(), controller.getNI().getActionOnList().getUserGroup().get(i).getIp(), NetWorkInterface.numeroMessageSend, NetWorkInterface.portReceiver,couleur));
 					}
 					messageToSend.setText("");
 				} catch (UnknownHostException e) {
@@ -208,7 +221,7 @@ public class GUI implements AbstractGui {
 					fConnected.setVisible(false);
 					initComponentNotConnected();
 					controller.getNI().getActionOnList().reInitList();
-					controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.disconnect, "", null, 0, NetWorkInterface.portReceiver));
+					controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.disconnect, "", null, 0, NetWorkInterface.portReceiver,couleur));
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -237,7 +250,7 @@ public class GUI implements AbstractGui {
 				if(arg0.getKeyChar() == 10){
 					try {
 						for(int i = 0;i<controller.getNI().getActionOnList().getUserGroup().size();i++){
-							controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.message, messageToSend.getText(), controller.getNI().getActionOnList().getUserGroup().get(i).getIp(), NetWorkInterface.numeroMessageSend, NetWorkInterface.portReceiver));
+							controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.message, messageToSend.getText(), controller.getNI().getActionOnList().getUserGroup().get(i).getIp(), NetWorkInterface.numeroMessageSend, NetWorkInterface.portReceiver,couleur));
 						}
 						messageToSend.setText("");
 					} catch (UnknownHostException e) {
@@ -386,6 +399,7 @@ public class GUI implements AbstractGui {
 	      arrayCouleur[6] = Color.orange;
 	      arrayCouleur[7] = Color.pink;
 	      arrayCouleur[8] = Color.gray;
+	      couleur = arrayCouleur[4];
 
 	      textNotCo.addKeyListener(new KeyListener(){
 
@@ -408,8 +422,8 @@ public class GUI implements AbstractGui {
 									fConnected.setVisible(true);
 								}
 								NetWorkInterface.myName = textNotCo.getText();
-								controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getLocalHost(), 0, NetWorkInterface.portReceiver));
-								controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getByName("255.255.255.255"), 0, NetWorkInterface.portReceiver));
+								controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getLocalHost(), 0, NetWorkInterface.portReceiver,couleur));
+								controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getByName("255.255.255.255"), 0, NetWorkInterface.portReceiver,couleur));
 							} catch (UnsupportedEncodingException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -487,8 +501,8 @@ public class GUI implements AbstractGui {
 							fConnected.setVisible(true);
 						}
 						NetWorkInterface.myName = textNotCo.getText();
-						controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getLocalHost(), 0, NetWorkInterface.portReceiver));
-						controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getByName("255.255.255.255"), 0, NetWorkInterface.portReceiver));
+						controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getLocalHost(), 0, NetWorkInterface.portReceiver,couleur));
+						controller.getNI().sendMessage(controller.getNI().getFactory().createMessage(Controller.connect, textNotCo.getText(), InetAddress.getByName("255.255.255.255"), 0, NetWorkInterface.portReceiver,couleur));
 					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -522,7 +536,8 @@ public class GUI implements AbstractGui {
 	}
 	
 	public void afficheMessage(String from,String message, int numero){
-		this.message.add(0,numero +" - "+from+" : "+message);//setText(this.messages.getText()+"\n"+numero +" - "+from+" : "+message);
+		Message mess = new Message("", numero+" - "+from+" > "+message, 0, null, couleur);
+		this.message.add(0,mess);
 	}
 	
 	public void afficheMessageAck(String from,int numero){
@@ -537,5 +552,17 @@ public class GUI implements AbstractGui {
 		this.controller = c;
 	}
 	
-	
+	class MyCellRenderer extends DefaultListCellRenderer
+	{
+	  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+	  {
+	    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+	    Message mess = (Message)value;
+	    Color bg = mess.getColor();
+	    setBackground(bg);
+	    
+	    setOpaque(true); // otherwise, it's transparent
+	    return this;  // DefaultListCellRenderer derived from JLabel, DefaultListCellRenderer.getListCellRendererComponent returns this as well.
+	  }
+	}
 }

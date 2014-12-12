@@ -8,16 +8,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
+import factory.Factory;
+import factory.Message;
+import factory.MessageAck;
+import factory.MessageDisconnect;
+import factory.MessageGlobal;
+import factory.MessageHello;
+import factory.MessageHelloAck;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import udpFactory.Factory;
-import udpFactory.Message;
-import udpFactory.MessageAck;
-import udpFactory.MessageDisconnect;
-import udpFactory.MessageGlobal;
-import udpFactory.MessageHello;
-import udpFactory.MessageHelloAck;
 import controller.Controller;
 
 public class NetWorkInterface {
@@ -153,7 +154,7 @@ public class NetWorkInterface {
 			
 			this.addMessage(this.getActionOnList().getNameFromIp(toTreatReal.getIp()),toTreatReal.getData(),toTreatReal.getNumber());
 			try {
-				this.sendMessage(this.factory.createMessage(Controller.messageAck,this.myName,toTreatReal.getIp(),toTreatReal.getNumber(),NetWorkInterface.portReceiver));
+				this.sendMessage(this.factory.createMessage(Controller.messageAck,this.myName,toTreatReal.getIp(),toTreatReal.getNumber(),NetWorkInterface.portReceiver,this.controller.getGui().getColor()));
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -175,7 +176,7 @@ public class NetWorkInterface {
 			MessageHello toTreatReal = (MessageHello)toTreat;
 			this.getActionOnList().addUserToList(toTreatReal.getNickName(),toTreatReal.getIp());
 			try {
-				this.sendMessage(this.factory.createMessage(Controller.connectAck,this.myName,toTreatReal.getIp(),0,NetWorkInterface.portReceiver));
+				this.sendMessage(this.factory.createMessage(Controller.connectAck,this.myName,toTreatReal.getIp(),0,NetWorkInterface.portReceiver,this.controller.getGui().getColor()));
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

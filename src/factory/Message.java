@@ -13,6 +13,17 @@ public class Message extends MessageGlobal{
 		return this.couleur;
 	}
 	
+	/**
+	 * 
+	 * Message with a specific data to write on the screen
+	 * 
+	 * @param data the data to write on the screen
+	 * @param number the distant message number send with the message
+	 * @param couleur the color the we shall use to display the message on the screean
+	 * 
+	 * @see MessageGlobal
+	 */
+	
 	public Message(String type,String data, int number,InetAddress ip,Color couleur) {
 		super(type, ip);
 		this.data = data;

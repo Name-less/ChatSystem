@@ -21,7 +21,15 @@ public class TCPSender implements Runnable  {
 	FileInputStream fis = null;
     BufferedInputStream bis;
     BufferedOutputStream out;
-    
+    /**
+     * This constructor create a new socket toward the distant host in order to send him the file
+     * 
+     * @param filePath the path to the file to send
+     * @param toSend the remote host to send the file
+     * 
+     * @see Socket
+     * 
+     */
 	public TCPSender(String filePath,InetAddress toSend){
 		this.path = filePath;
 		try {
@@ -34,7 +42,11 @@ public class TCPSender implements Runnable  {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * 
+	 * Send the file to send and destroye the socket and the thread after that
+	 * 
+	 */
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub

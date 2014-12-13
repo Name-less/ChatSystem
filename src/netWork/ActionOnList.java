@@ -17,14 +17,33 @@ public class ActionOnList {
 		this.controller  = c;
 	}
 	
+	/**
+	 * 
+	 * Use full to add a user to a list, only if he is not actually in this list
+	 * Update also the list on the controller in order to display the new list on the screen
+	 * 
+	 * @param name the nick name of the user to add
+	 * @param ip his address IP
+	 * 
+	 * @see User
+	 */
 	
 	public void addUserToList(String name, InetAddress ip){
 		User userToAdd = new User(name,ip);
 		if(!this.exist(userToAdd)){
-			this.userList.add(userToAdd);//peut être vérifier qu'il n'existe pas déja car si il existe deja ca ne vas pas etre possible, à ca non non non
+			this.userList.add(userToAdd);//peut ÔøΩtre vÔøΩrifier qu'il n'existe pas dÔøΩja car si il existe deja ca ne vas pas etre possible, ÔøΩ ca non non non
 			controller.majUserList(this.userList);
 		}
 	}
+	
+	
+	/**
+	 * 
+	 * Use full to remose a user to a list
+	 * Update also the list on the controller in order to display the new list on the screen
+	 * 
+	 * @param name the nick name to delete
+	 */
 	
 	public void removeUserToList(String name){
 		if(this.userList.remove(name)){
@@ -34,7 +53,7 @@ public class ActionOnList {
 	
 	public void addUserToListGroup(int whichUser){
 		User userToAdd = userList.get(whichUser);
-		this.userGroupToSend.add(userToAdd);//peut être vérifier qu'il n'existe pas déja car si il existe deja ca ne vas pas etre possible, à ca non non non
+		this.userGroupToSend.add(userToAdd);//peut ÔøΩtre vÔøΩrifier qu'il n'existe pas dÔøΩja car si il existe deja ca ne vas pas etre possible, ÔøΩ ca non non non
 	}
 	
 	public void removeUserToListGroup(int whichUser){
@@ -59,6 +78,15 @@ public class ActionOnList {
 		this.userGroupToSend = new ArrayList<User>();
 	}
 	
+/**
+ * 
+ * Return the nick name from the IP address passed
+ * 
+ * @param address the IP address to use in order to find the nick name
+ * @return the nick name of the user who has this IP address. 
+ * @return null if the address IP is not in the list
+ */
+	
 	public String getNameFromIp(InetAddress address){
 		for(int i = 0;i<this.userList.size();i++){
 			if(userList.get(i).getIp().equals(address)){
@@ -67,6 +95,15 @@ public class ActionOnList {
 		}
 		return null;
 	}
+	
+	/**
+	 * 
+	 * Return the nick name from the IP address passed
+	 * 
+	 * @param name the nick name to use in order to find the IP address
+	 * @return the IP address of the user who has this nick name. 
+	 * @return null if the nick name is not in the list
+	 */
 
 	public InetAddress getIpFromName(String name){
 		for(int i = 0;i<this.userList.size();i++){

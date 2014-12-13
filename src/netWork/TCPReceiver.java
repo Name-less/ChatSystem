@@ -16,6 +16,15 @@ public class TCPReceiver implements Runnable {
 	ServerSocket mySocket;
 	boolean keepGoing = true;
 	
+	/**
+	 * Create a socket which listen a specified port in order to
+	 * receive a file
+	 * 
+	 * @param ni link to the netWorkInterface in order to communicate the file receive to him
+	 * 
+	 * @see NetWorkInterface
+	 */
+	
 	public TCPReceiver(NetWorkInterface ni){
 		this.ni = ni;
 		try {
@@ -28,6 +37,10 @@ public class TCPReceiver implements Runnable {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * create a new thread every time we receive a file
+	 */
 	
 	@Override
 	public void run() {
@@ -48,6 +61,14 @@ public class TCPReceiver implements Runnable {
 		this.keepGoing = false;
 	}
 
+	/**
+	 * Class used to receive the file in an other thread
+	 * and to store it on a new file
+	 * before closing the connexion and killing the thread
+	 * 
+	 * @author julescantegril
+	 *
+	 */
 	public class newThreadWaitingForFile implements Runnable{
 
 	    InputStream is = null;

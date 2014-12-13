@@ -40,6 +40,16 @@ import netWork.User;
 import controller.Controller;
 import factory.Message;
 
+/**
+ * 
+ * @author julescantegril
+ *
+ * Our Abstract class Gui implements in Java Swing in order to be able to communicate one computer to
+ * one other with the java RunTime softWare
+ *
+ * @see AbstractGui
+ *
+ */
 
 public class GUI implements AbstractGui {
 	protected static JTextField messageToSend;

@@ -21,6 +21,14 @@ public class Factory extends AbstractFactory {
 		this.ni = ni;
 	}
 	
+	/**
+	 * 
+	 * Implementation of these two methods in order to treat or create message while using JSON object as our technology.
+	 * 
+	 * @see AbstractFactory 
+	 * 
+	 */
+	
 	public DatagramPacket createMessage(String type,String value,InetAddress host,int messageNumber,int port,Color couleur) throws UnknownHostException, JSONException, UnsupportedEncodingException {
 		byte [] lol = new byte[1024];
 		DatagramPacket message = new DatagramPacket(lol,0,host,port);

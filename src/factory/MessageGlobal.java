@@ -7,6 +7,15 @@ public class MessageGlobal {
 	private String type;
 	private InetAddress ip;
 	
+	/**
+	 * 
+	 * Parent class of all our messages
+	 * 
+	 * @param  type  the type of our message
+	 * @param ip the addres ip where the message come from
+	 * 
+	 */
+	
 	public MessageGlobal(String type,InetAddress ip){
 		this.type = type;
 		this.ip = ip;

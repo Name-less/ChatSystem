@@ -6,7 +6,18 @@ import java.util.ArrayList;
 import controller.Controller;
 import netWork.User;
 
+/**
+ * 
+ * @author julescantegril
+ *
+ * Abstract class to implement with the specific technology used in order to be able to display message on the screen,
+ * update connected list or send message
+ *
+ */
+
 public interface AbstractGui {
+
+	
 	public abstract void majUserList(ArrayList<User> userList);
 	
 	public abstract void afficheMessage(String from,String message, int numero);

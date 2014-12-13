@@ -13,7 +13,12 @@ public class UDPSender implements Runnable {
 	private DatagramPacket packetToSend;
 	
 	private boolean running;
-	
+	/**
+	 * 
+	 * Create a new socket in order to send message on UDP
+	 * We use our own IP Address and a port not really important
+	 * 
+	 */
 	public UDPSender(){
 		running = true;
 		try {
@@ -27,6 +32,13 @@ public class UDPSender implements Runnable {
 		}
 	}
 
+	/**
+	 * When we have a notification we send the packet
+	 * The notification come always when we set the datagram packet of the class
+	 * After we wait until the next new packet
+	 * 
+	 * @see setDatagramPacket
+	 */
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -50,9 +62,13 @@ public class UDPSender implements Runnable {
 	public void disconnect(){
 		this.running = false;
 	}
-	
+	/**
+	 * Set the datagram packet and notify the object in order to send it.
+	 * @param p
+	 */
 	public void setDatagramPacket(DatagramPacket p){
 		this.packetToSend = p;
+		this.notify();
 	}
 	
 }

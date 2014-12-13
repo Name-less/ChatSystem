@@ -37,6 +37,18 @@ public class NetWorkInterface {
 	
 	public static String myName = "Xineohp";
 
+/**
+ * 
+ * This construcor launch 3 thread in order to be able to send message, receive them and also to receive a file.
+ * 
+ * @param controller the controller used to give every message we receive in order to give them to the 
+ * Gui and display something at the screen if necessary
+ * 
+ * @see Controller
+ * @see UDPSender
+ * @see UDPReceiver
+ * @see TCPReceiver
+ */
 	public NetWorkInterface(Controller controller){
 		actionOnList = new ActionOnList(controller);
 		factory = new Factory(this);
@@ -55,7 +67,11 @@ public class NetWorkInterface {
 		renTCPThreadReceiver.start();
 		
 	}
-	
+	/**
+	 * Launch a new thread at each UDP packet received
+	 * 
+	 * @see TraiterPacketRecu
+	 */
 	public void addPacketRecu(DatagramPacket packet){		
 		Thread threadTraitePacket = new Thread(new TraiterPacketRecu(packet));
 		threadTraitePacket.start();
@@ -81,7 +97,14 @@ public class NetWorkInterface {
 	 * 
 	 */
 	
-
+/**
+ * This class is just a Runnable that will be launch in a new thread in order to treat the packet in an
+ * other thread than the main one
+ * 
+ * @author julescantegril
+ *
+ * @see AbstractFactory
+ */
 	public class TraiterPacketRecu implements Runnable{
 
 		DatagramPacket toTreat;
@@ -122,10 +145,16 @@ public class NetWorkInterface {
 	public void sendMessage(DatagramPacket packetToSend){
 		synchronized(udpSender){
 			udpSender.setDatagramPacket(packetToSend);
-			udpSender.notify();
 		}
 	}
 	
+	/**
+	 * Create a new thread to send a specific file by a TCP connexion
+	 * 
+	 * @param filePath the file to the path we want to send
+	 * @param destination the IP adress where we want to send it
+	 * 
+	 */
 	public void sendFile(String filePath,InetAddress destination){
 		
 		Thread launchFileSend = new Thread(new TCPSender(filePath,destination));
@@ -146,7 +175,17 @@ public class NetWorkInterface {
 	public Factory getFactory(){
 		return this.factory;
 	}
-	
+	/**
+	 * This method do something with the message we just
+	 * receive by the UDP channel.
+	 * For sample, the NI use the Controller to tell the Gui to udpate the user list displayed at
+	 * the screen if we receive a helloAck message or a hell message.
+	 * 
+	 * @param toTreat the message we need to tread.
+	 * 
+	 * @see MessageGlobal
+	 * 
+	 */
 	public void treatMessage(MessageGlobal toTreat){
 		if(toTreat.getType().equals(Controller.message)){
 			Message toTreatReal = (Message)toTreat;

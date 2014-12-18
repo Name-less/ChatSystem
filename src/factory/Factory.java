@@ -43,7 +43,7 @@ public class Factory extends AbstractFactory {
 				}
 				hex = "#" + hex;
 				}catch(NullPointerException e){
-					
+					hex = "#145735";
 				}
 				data.put(Controller.type, Controller.message);
 				data.put(Controller.messageData,value);

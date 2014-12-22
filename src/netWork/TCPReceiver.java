@@ -1,9 +1,11 @@
 package netWork;
 
 import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -47,7 +49,7 @@ public class TCPReceiver implements Runnable {
 		// TODO Auto-generated method stub
 		while(keepGoing){
 			try {
-				Thread newThreadSocket = new Thread(new newThreadWaitingForFile(mySocket.accept(),"string"));
+				Thread newThreadSocket = new Thread(new newThreadWaitingForFile(mySocket.accept()));
 				newThreadSocket.start();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -75,46 +77,35 @@ public class TCPReceiver implements Runnable {
 	    FileOutputStream fos = null;
 	    BufferedOutputStream bos = null;
 	    Socket mySocket;
-	    String fileName;
 		
-	    public newThreadWaitingForFile(Socket mySocket,String fileName){
+	    public newThreadWaitingForFile(Socket mySocket){
 	    	this.mySocket = mySocket;
-	    	this.fileName = fileName;
 	    }
 	    
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			
 			/*
 			 * Receive our file
 			 */
-			
-			try {
-				is = mySocket.getInputStream();
-		        fos = new FileOutputStream(fileName);
-		        bos = new BufferedOutputStream(fos);
-		        byte[] bytes = new byte[mySocket.getReceiveBufferSize()];
-		        int count = 0;
+			try{
+			InputStream in = mySocket.getInputStream();
+            DataInputStream clientData = new DataInputStream(in);
 
-		        while ((count = is.read(bytes)) > 0) {
-		        	System.out.println("nem file");
-		            bos.write(bytes, 0, count);
-		        }
-		        
-		        bos.flush();
-		        bos.close();
-		        is.close();
-		        mySocket.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
-			
-			
-			
+            String nameFile = clientData.readUTF();
+            long size = clientData.readLong();
+             
+            OutputStream output = new FileOutputStream(nameFile);
+            
+            int bytesRead;
+            byte[] buffer = new byte[1024];
+            while (size > 0 && (bytesRead = clientData.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
+                output.write(buffer, 0, bytesRead);
+                size -= bytesRead;
+            }	
+			}catch(IOException e){
+				
+			}					
 		}
 		
 	}
